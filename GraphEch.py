@@ -196,10 +196,9 @@ class GraphC7(GraphC):
 
 
 class GraphC8(GraphC):
-    def __init__(self):
+    def __init__(self, points):
         super().__init__()
 
-    def init_four(self, points):
         self.point_index = 9
         self.remain_points = points
         self.G.add_node(1, point_num=2, position=(0, 2))
@@ -214,25 +213,13 @@ class GraphC8(GraphC):
 
         for _ in range(1, 9):
             self.G.add_edge(_, _ % 8 + 1, edge_num=1)
-            self.useful_edge.append((_, _ % 8 + 1))
         self.edge += 8
 
-    def init_three(self, points):
-        self.point_index = 9
-        self.remain_points = points
-        self.G.add_node(1, point_num=2, position=(0, 2))
-        self.G.add_node(2, point_num=2, position=(1.5, 1.5))
-        self.G.add_node(3, point_num=2, position=(2, 0))
-        self.G.add_node(4, point_num=2, position=(1.5, -1.5))
-        self.G.add_node(5, point_num=2, position=(0, -2))
-        self.G.add_node(6, point_num=2, position=(-1.5, -1.5))
-        self.G.add_node(7, point_num=2, position=(-2, 0))
-        self.G.add_node(8, point_num=2, position=(-1.5, 1.5))
-        self.remain_points -= 8
-
+    def init_four(self):
         for _ in range(1, 9):
-            self.G.add_edge(_, _ % 8 + 1, edge_num=1)
-            # self.useful_edge.append((_, _ % 8 + 1))
+            self.useful_edge.append((_, _ % 8 + 1))
+
+    def init_three(self):
         self.useful_edge.append((1, 2))
         self.useful_edge.append((3, 2))
         self.useful_edge.append((3, 4))
@@ -242,58 +229,16 @@ class GraphC8(GraphC):
         self.edge += 7
         self.remain_points -= 2
 
-        self.edge += 8
-
-    def init_two(self, points):
-        self.point_index = 9
-        self.remain_points = points
-        self.G.add_node(1, point_num=2, position=(0, 2))
-        self.G.add_node(2, point_num=2, position=(1.5, 1.5))
-        self.G.add_node(3, point_num=2, position=(2, 0))
-        self.G.add_node(4, point_num=2, position=(1.5, -1.5))
-        self.G.add_node(5, point_num=2, position=(0, -2))
-        self.G.add_node(6, point_num=2, position=(-1.5, -1.5))
-        self.G.add_node(7, point_num=2, position=(-2, 0))
-        self.G.add_node(8, point_num=2, position=(-1.5, 1.5))
-        self.remain_points -= 8
-
-        for _ in range(1, 9):
-            self.G.add_edge(_, _ % 8 + 1, edge_num=1)
-            # self.useful_edge.append((_, _ % 8 + 1))
+    def init_two(self):
         self.useful_edge.append((1, 2))
         self.useful_edge.append((3, 2))
-        # self.useful_edge.append((3, 4))
-        # self.useful_edge.append((5, 4))
         self.useful_edge.append((5, 6))
         self.useful_edge.append((7, 6))
         self.edge += 14
         self.remain_points -= 4
 
-        self.edge += 8
-
-    def init_one(self, points):
-        self.point_index = 9
-        self.remain_points = points
-        self.G.add_node(1, point_num=2, position=(0, 2))
-        self.G.add_node(2, point_num=2, position=(1.5, 1.5))
-        self.G.add_node(3, point_num=2, position=(2, 0))
-        self.G.add_node(4, point_num=2, position=(1.5, -1.5))
-        self.G.add_node(5, point_num=2, position=(0, -2))
-        self.G.add_node(6, point_num=2, position=(-1.5, -1.5))
-        self.G.add_node(7, point_num=2, position=(-2, 0))
-        self.G.add_node(8, point_num=2, position=(-1.5, 1.5))
-        self.remain_points -= 8
-
-        for _ in range(1, 9):
-            self.G.add_edge(_, _ % 8 + 1, edge_num=1)
-            # self.useful_edge.append((_, _ % 8 + 1))
-        # self.useful_edge.append((1, 2))
-        # self.useful_edge.append((3, 2))
+    def init_one(self):
         self.useful_edge.append((3, 4))
-        # self.useful_edge.append((5, 4))
-        # self.useful_edge.append((5, 6))
         self.useful_edge.append((7, 6))
         self.edge += 21
         self.remain_points -= 6
-
-        self.edge += 8

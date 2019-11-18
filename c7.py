@@ -57,20 +57,20 @@ def run():
 
         # graph = GraphC7()
 
-        graph_four = GraphC8()
-        graph_four.init_four(points)
+        graph_four = GraphC8(points)
+        graph_four.init_four()
         make_graph(graph_four)
 
-        graph_three = GraphC8()
-        graph_three.init_three(points)
+        graph_three = GraphC8(points)
+        graph_three.init_three()
         make_graph(graph_three)
 
-        graph_two = GraphC8()
-        graph_two.init_two(points)
+        graph_two = GraphC8(points)
+        graph_two.init_two()
         make_graph(graph_two)
 
-        graph_one = GraphC8()
-        graph_one.init_one(points)
+        graph_one = GraphC8(points)
+        graph_one.init_one()
         make_graph(graph_one)
 
         graph1 = graph_four if graph_four.edge > graph_two.edge else graph_two
