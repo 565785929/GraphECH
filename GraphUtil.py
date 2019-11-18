@@ -49,13 +49,15 @@ def find_len_points(graph, point, length):
     :return:
     """
     li = []
+    result = []
     # 从新增的开始 新增的k5会更远
     for t in graph.G.nodes():
         li.append(t)
     for target in li[::-1]:
         if nx.shortest_path_length(graph.G, point, target) == length - 1:
-            return target
-    return -1
+            result.append(target)
+
+    return result
 
 
 def find_all_p7_points(graph):
@@ -241,7 +243,19 @@ def save_graph(point, graph, path="img"):
 
 def show_graph(graph):
     pos = nx.get_node_attributes(graph.G, 'position')
+    # pos = nx.circular_layout(graph.G)
+    # pos = nx.spectral_layout(graph.G)  # Position nodes using Kamada-Kawai path-length cost-function.
+    nx.draw_networkx_nodes(graph.G, pos,
+                           nodelist=graph.G.nodes(),
+                           node_color='y')
+
+    nx.draw_networkx_nodes(graph.G, pos,
+                           nodelist=graph.useful_point,
+                           node_color='r')
     nx.draw(graph.G, with_labels=True, pos=pos)
+    nx.draw_networkx_nodes(graph.G, pos,
+                           nodelist=graph.useful_point,
+                           node_color='r')
     plt.show()
 
 #

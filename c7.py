@@ -1,5 +1,7 @@
 from GraphEch import *
 
+result_graph = None
+
 
 @count_time()
 def make_graph(graphs):
@@ -7,10 +9,11 @@ def make_graph(graphs):
     绘制图
     :param graph_c: 图
     """
+    global result_graph
     result_graph = graphs[0]
 
     while len(graphs) != 0:
-        graph_c = graphs.pop()
+        graph_c = graphs.pop(0)
 
         # 仍有未使用的点
         while graph_c.remain_points != 0:
@@ -19,7 +22,6 @@ def make_graph(graphs):
                 if graph_c.remain_points >= 3:
                     # 拓展k5
                     add_k5(graph_c, graph_c.useful_edge.pop())
-
                 if graph_c.remain_points == 0:
                     # 无可用点 TODO 可优化 分解四个k5
                     break
@@ -47,19 +49,21 @@ def make_graph(graphs):
 
             if graph_c.useful_edge_length() == 0 and graph_c.remain_points != 0:
                 # 制造可拓展边
-                graph_c.expand_p()
+                graphs.extend(graph_c.expand_p())
+                break
 
         # 拓展所有p7
         graph_c.all_p7()
-        if graph_c.edge > result_graph.edge:
+        if graph_c.edge >= result_graph.edge:
+            # if graph_c.point_index <= result_graph.point_index:
             result_graph = graph_c
 
-    return result_graph
+    return deepcopy(result_graph)
 
 
 @count_time("The total time： ")
 def run():
-    path = "lay_img_c8"
+    path = "img"
     mkdir(path)
     for points in range(28, 50):
 
@@ -78,11 +82,11 @@ def run():
         graph_one.init_one()
 
         graphs = [graph_four, graph_three, graph_two, graph_one]
+        # graphs = [graph_two, ]
 
         graph = make_graph(graphs)
-
-        save_graph(points, graph, path=path)
-
+        print(result_graph)
+        save_graph(points, result_graph, path=path)
 
 
 if __name__ == '__main__':

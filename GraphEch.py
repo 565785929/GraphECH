@@ -1,13 +1,20 @@
+from copy import deepcopy
+
 from GraphUtil import *
 
 
 class GraphC:
     def __init__(self):
         self.G = nx.Graph()
+        # 边数
         self.edge = 0
+        # 可用点
         self.useful_point = []
+        # 点索引
         self.point_index = 1
+        # 可用边
         self.useful_edge = []
+        # 总点
         self.remain_points = 0
 
     def useful_edge_length(self):
@@ -56,11 +63,14 @@ class GraphC:
         无可用边，加点拓展
         :return:
         """
-        if not self.p7():
-            if not self.p6():
-                if not self.p5():
-                    print("-=" * 20)
-                    print("Can't expand graph")
+        results = self.p6()
+        if len(results) == 0:
+            results = self.p5()
+            if len(results) == 0:
+                print("-=" * 20)
+                print("Can't expand graph")
+
+        return results
 
     def p7(self):
         for p in self.useful_point:
@@ -73,53 +83,66 @@ class GraphC:
         return False
 
     def p6(self):
-        for p in self.useful_point:
-            p1 = find_len_points(self, p, 6)
-            if p1 != -1:
-                pos1 = self.G.nodes[p]['position']
-                pos2 = self.G.nodes[p1]['position']
+        res = []
+        for source in self.useful_point:
+            targets = find_len_points(self, source, 6)
+            for target in targets:
+                g = deepcopy(self)
+                pos1 = g.G.nodes[source]['position']
+                pos2 = g.G.nodes[target]['position']
                 x, y = add_xpoint(pos1, pos2)
-                self.G.add_node(self.point_index, point_num=0, position=(x, y))
+                g.G.add_node(g.point_index, point_num=0, position=(x, y))
+                g.G.add_edge(source, g.point_index)
+                g.G.add_edge(target, g.point_index)
+                g.remain_points -= 1
+                g.edge += 2
 
-                self.useful_edge.append((p, self.point_index))
-                self.useful_edge.append((p1, self.point_index))
-                self.G.add_edge(p, self.point_index)
-                self.G.add_edge(p1, self.point_index)
-                self.point_index += 1
-                self.remain_points -= 1
-                self.edge += 2
-                return True
-        return False
+                g_k5e = deepcopy(g)
+                g_k5e.useful_edge.append((source, g.point_index))
+                g_k5e.useful_edge.append((target, g.point_index))
+                g_k5e.point_index += 1
+                res.append(g_k5e)
+
+                g.point_index += 1
+                if g.remain_points >= 2:
+                    g.remain_points -= 2
+                    g.edge += 7
+                    res.append(g)
+                # show_graph(g)
+
+        return res
 
     def p5(self):
-        for p in self.useful_point:
-            p1 = find_len_points(self, p, 5)
-            if p1 != -1:
-                pos1 = self.G.nodes[p]['position']
-                pos2 = self.G.nodes[p1]['position']
+        res = []
+        for source in self.useful_point:
+            targets = find_len_points(self, source, 5)
+
+            for target in targets:
+                g = deepcopy(self)
+                pos1 = g.G.nodes[source]['position']
+                pos2 = g.G.nodes[target]['position']
                 x, y = (pos1[0]+pos2[0]) / 3, (pos1[1]+pos2[1]) / 3
-                self.G.add_node(self.point_index, point_num=0, position=(x, y))
-                self.useful_edge.append((p, self.point_index))
-                self.G.add_edge(p, self.point_index)
-                self.point_index += 1
-                self.remain_points -= 1
-                self.edge += 1
-                if self.remain_points >= 1:
-                    self.useful_edge.append((self.point_index - 1, self.point_index))
-                    self.G.add_edge(self.point_index - 1, self.point_index)
+                g.G.add_node(g.point_index, point_num=0, position=(x, y))
+                g.useful_edge.append((source, g.point_index))
+                g.G.add_edge(source, g.point_index)
+                g.point_index += 1
+                g.remain_points -= 1
+                g.edge += 1
+                if g.remain_points >= 1:
+                    g.useful_edge.append((g.point_index - 1, g.point_index))
+                    g.G.add_edge(g.point_index - 1, g.point_index)
 
                     x1, y1 = (pos1[0] + pos2[0]) / 3 * 2, (pos1[1] + pos2[1]) / 3 * 2
 
-                    self.G.add_node(self.point_index, point_num=0, position=(x1, y1))
-                    self.useful_edge.append((p1, self.point_index))
-                    self.G.add_edge(p1, self.point_index)
+                    g.G.add_node(g.point_index, point_num=0, position=(x1, y1))
+                    g.useful_edge.append((target, g.point_index))
+                    g.G.add_edge(target, g.point_index)
 
-                    self.point_index += 1
-                    self.remain_points -= 1
-                    self.edge += 2
-
-                return True
-        return False
+                    g.point_index += 1
+                    g.remain_points -= 1
+                    g.edge += 2
+                    res.append(g)
+        return res
 
     def all_p7(self):
         """
