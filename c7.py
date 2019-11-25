@@ -63,7 +63,7 @@ def make_graph(graphs):
 
 @count_time("The total time： ")
 def run():
-    path = "img"
+    path = "img_p7"
     mkdir(path)
     for points in range(28, 50):
 

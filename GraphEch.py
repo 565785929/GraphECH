@@ -16,6 +16,9 @@ class GraphC:
         self.useful_edge = []
         # 总点
         self.remain_points = 0
+        # k5e
+        self.k5e_point = []
+
 
     def useful_edge_length(self):
         """
@@ -63,24 +66,28 @@ class GraphC:
         无可用边，加点拓展
         :return:
         """
-        results = self.p6()
+        results = self.p7()
         if len(results) == 0:
-            results = self.p5()
+            results = self.p6()
             if len(results) == 0:
-                print("-=" * 20)
-                print("Can't expand graph")
+                results = self.p5()
+                if len(results) == 0:
+                    print("-=" * 20)
+                    print("Can't expand graph")
 
         return results
 
     def p7(self):
-        for p in self.useful_point:
-            p1 = find_len_points(self, p, 7)
+        res = []
+        for source in self.useful_point:
+            targets = find_len_points(self, source, 7)
             # p1 = find_fixed_len_points_one(self, p, 7)
-            if p1 != -1:
-                self.useful_edge.append((p, p1))
-                self.G.add_edge(p, p1)
-                return True
-        return False
+            for target in targets:
+                g = deepcopy(self)
+                g.useful_edge.append((source, target))
+                g.G.add_edge(source, target)
+                res.append(g)
+        return res
 
     def p6(self):
         res = []
@@ -103,8 +110,9 @@ class GraphC:
                 g_k5e.point_index += 1
                 res.append(g_k5e)
 
-                g.point_index += 1
                 if g.remain_points >= 2:
+                    g.k5e_point.append(g.point_index)
+                    g.point_index += 1
                     g.remain_points -= 2
                     g.edge += 7
                     res.append(g)

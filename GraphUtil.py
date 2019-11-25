@@ -230,13 +230,14 @@ def save_graph(point, graph, path="img"):
                            nodelist=graph.G.nodes(),
                            node_color='y')
 
-    nx.draw_networkx_nodes(graph.G, pos,
-                           nodelist=graph.useful_point,
-                           node_color='r')
     nx.draw(graph.G, with_labels=True, pos=pos)
     nx.draw_networkx_nodes(graph.G, pos,
                            nodelist=graph.useful_point,
                            node_color='r')
+    nx.draw_networkx_nodes(graph.G, pos,
+                           nodelist=graph.k5e_point,
+                           node_color='y')
+
     plt.savefig('./%s/%d_%d.jpg' % (path, point, graph.edge))
     plt.close()
 
