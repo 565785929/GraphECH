@@ -112,6 +112,7 @@ class GraphC:
 
                 if g.remain_points >= 2:
                     g.k5e_point.append(g.point_index)
+                    g.useful_point.append(g.point_index)
                     g.point_index += 1
                     g.remain_points -= 2
                     g.edge += 7

@@ -121,8 +121,8 @@ def add_k5(graph, node, f=True):
     :return:
     """
     node1, node2 = node
-    pos1 = graph.G.node[node1]['position']
-    pos2 = graph.G.node[node2]['position']
+    pos1 = graph.G.nodes[node1]['position']
+    pos2 = graph.G.nodes[node2]['position']
     x, y = add_xpoint(pos1, pos2, f)
 
     graph.G.add_node(graph.point_index, point_num=0, position=(x, y))
@@ -141,8 +141,8 @@ def add_k5(graph, node, f=True):
 
 def add_12(graph, edge):
     point = graph.point_index
-    pos1 = graph.G.node[edge[0]]['position']
-    pos2 = graph.G.node[edge[1]]['position']
+    pos1 = graph.G.nodes[edge[0]]['position']
+    pos2 = graph.G.nodes[edge[1]]['position']
     x, y = add_xpoint(pos1, pos2, f=False)
     graph.G.add_node(point, point_num=0, position=(x, y))
     graph.edge += 2
@@ -156,8 +156,8 @@ def add_12(graph, edge):
 
 def add_13(graph, edge):
     point = graph.point_index
-    pos1 = graph.G.node[edge[0]]['position']
-    pos2 = graph.G.node[edge[2]]['position']
+    pos1 = graph.G.nodes[edge[0]]['position']
+    pos2 = graph.G.nodes[edge[2]]['position']
     x1, y1 = add_xpoint(pos1, pos2, f=False)
     graph.edge += 3
     graph.G.add_node(point, point_num=0, position=(x1, y1))
@@ -173,8 +173,8 @@ def add_25(graph, edge):
     point1 = graph.point_index
     point2 = graph.point_index + 1
 
-    pos1 = graph.G.node[edge[0]]['position']
-    pos2 = graph.G.node[edge[1]]['position']
+    pos1 = graph.G.nodes[edge[0]]['position']
+    pos2 = graph.G.nodes[edge[1]]['position']
     x1, y1 = add_xpoint(pos1, pos2)
     x2, y2 = add_xpoint(pos1, pos2, f=False)
 
@@ -195,9 +195,9 @@ def add_k5e(graph, edge):
     point1 = graph.point_index
     point2 = graph.point_index + 1
 
-    pos1 = graph.G.node[edge[0]]['position']
-    pos2 = graph.G.node[edge[1]]['position']
-    pos3 = graph.G.node[edge[2]]['position']
+    pos1 = graph.G.nodes[edge[0]]['position']
+    pos2 = graph.G.nodes[edge[1]]['position']
+    pos3 = graph.G.nodes[edge[2]]['position']
     x1, y1 = add_xpoint(pos1, pos2)
     x2, y2 = add_xpoint(pos3, pos2)
 
@@ -238,7 +238,7 @@ def save_graph(point, graph, path="img"):
                            nodelist=graph.k5e_point,
                            node_color='y')
 
-    plt.savefig('./%s/%d_%d.jpg' % (path, point, graph.edge))
+    plt.savefig('./%s/%d_%d.png' % (path, point, graph.edge))
     plt.close()
 
 
@@ -265,8 +265,8 @@ def show_graph(graph):
 #     if len(edge) == 0:
 #         return False
 #     elif len(edge) == 2:
-#         pos1 = graph.G.node[edge[0]]['position']
-#         pos2 = graph.G.node[edge[1]]['position']
+#         pos1 = graph.G.nodes[edge[0]]['position']
+#         pos2 = graph.G.nodes[edge[1]]['position']
 #         x, y = add_xpoint(pos1, pos2, f=False)
 #         graph.G.add_node(point, point_num=0, position=(x, y))
 #         graph.edge += 2
@@ -274,8 +274,8 @@ def show_graph(graph):
 #         graph.G.add_edge(point, edge[0])
 #         graph.G.add_edge(point, edge[1])
 #     elif len(edge) == 3:
-#         pos1 = graph.G.node[edge[0]]['position']
-#         pos2 = graph.G.node[edge[2]]['position']
+#         pos1 = graph.G.nodes[edge[0]]['position']
+#         pos2 = graph.G.nodes[edge[2]]['position']
 #         x1, y1 = add_xpoint(pos1, pos2, f=False)
 #         graph.edge += 3
 #         graph.G.add_node(point, point_num=0, position=(x1, y1))
