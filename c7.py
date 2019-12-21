@@ -1,6 +1,7 @@
 from GraphEch import *
-
+import time
 result_graph = None
+result_gs = None
 
 
 @count_time()
@@ -10,8 +11,10 @@ def make_graph(graphs):
     :param graph_c: 图
     """
     global result_graph
-    result_graph = graphs[0]
+    global result_gs
 
+    result_graph = graphs[0]
+    result_gs = []
     while len(graphs) != 0:
         graph_c = graphs.pop(0)
 
@@ -47,7 +50,7 @@ def make_graph(graphs):
                     else:
                         add_25(graph_c, edge)
 
-            if graph_c.useful_edge_length() == 0 and graph_c.remain_points != 0:
+            if graph_c.useful_edge_length() == 0:
                 # 制造可拓展边
                 graphs.extend(graph_c.expand_p())
                 break
@@ -55,17 +58,20 @@ def make_graph(graphs):
         # 拓展所有p7
         graph_c.all_p7()
         if graph_c.edge >= result_graph.edge:
-            # if graph_c.point_index <= result_graph.point_index:
-            result_graph = graph_c
+            if graph_c.edge == result_graph.edge:
+                result_gs.append(graph_c)
+            else:
+                result_gs.clear()
+                result_graph = graph_c
 
     return deepcopy(result_graph)
 
 
 @count_time("The total time： ")
 def run():
-    path = "img_new_p6"
+    path = "img_uuid"
     mkdir(path)
-    for points in range(28, 50):
+    for points in range(28, 52):
 
         # graph = GraphC7()
 
@@ -87,6 +93,14 @@ def run():
         graph = make_graph(graphs)
         print(result_graph)
         save_graph(points, result_graph, path=path)
+        print(time.strftime('%Y.%m.%d %H:%M:%S ', time.localtime(time.time())))
+
+        # ALL graph
+
+        for g in result_gs:
+            # test
+            g.shit_method()
+            save_graph(points, g, path)
 
 
 if __name__ == '__main__':

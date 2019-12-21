@@ -112,7 +112,7 @@ def add_xpoint(pos1, pos2, f=True):
         return x, y
 
 
-def add_k5(graph, node, f=True):
+def add_k5_(graph, node, f=True):
     """
     添加一个K5
     :param graph:
@@ -134,6 +134,57 @@ def add_k5(graph, node, f=True):
     graph.remain_points -= 3
     graph.edge += 9
     graph.point_index += 1
+
+
+    return graph
+
+
+def add_k5(graph, node, f=True):
+    """
+    添加一个K5
+    :param graph:
+    :param node:
+    :param f:
+    :return:
+    """
+    point3 = graph.point_index
+    point2 = graph.point_index + 1
+    point1 = graph.point_index + 2
+
+
+
+    node1, node2 = node
+    pos1 = graph.G.nodes[node1]['position']
+    pos2 = graph.G.nodes[node2]['position']
+    x, y = add_xpoint(pos1, pos2, f)
+
+    graph.G.add_node(graph.point_index, point_num=0, position=(x, y))
+    graph.useful_point.append(graph.point_index)
+
+    graph.G.add_edge(graph.point_index, node1, edge_num=1)
+    graph.G.add_edge(graph.point_index, node2, edge_num=1)
+
+
+    edge = [node1, point3, node2]
+    pos1 = graph.G.nodes[edge[0]]['position']
+    pos2 = graph.G.nodes[edge[1]]['position']
+    pos3 = graph.G.nodes[edge[2]]['position']
+    x1, y1 = add_xpoint(pos1, pos2)
+    x2, y2 = add_xpoint(pos3, pos2)
+
+    graph.G.add_node(point1, point_num=0, position=(x1, y1))
+    graph.G.add_node(point2, point_num=0, position=(x2, y2))
+    graph.G.add_edge(point1, edge[0])
+    graph.G.add_edge(point1, edge[1])
+    graph.G.add_edge(point1, edge[2])
+    graph.G.add_edge(point2, edge[0])
+    graph.G.add_edge(point2, edge[1])
+    graph.G.add_edge(point2, edge[2])
+    graph.G.add_edge(point2, point1)
+
+    graph.remain_points -= 3
+    graph.edge += 9
+    graph.point_index += 3
 
 
     return graph
@@ -237,8 +288,8 @@ def save_graph(point, graph, path="img"):
     nx.draw_networkx_nodes(graph.G, pos,
                            nodelist=graph.k5e_point,
                            node_color='y')
-
-    plt.savefig('./%s/%d_%d.png' % (path, point, graph.edge))
+    import uuid
+    plt.savefig('./%s/%d_%d_%s.png' % (path, point, graph.edge, uuid.uuid1()))
     plt.close()
 
 
@@ -258,6 +309,53 @@ def show_graph(graph):
                            nodelist=graph.useful_point,
                            node_color='r')
     plt.show()
+
+
+# 判断图中是否出现C6
+def is_more_6(data, source=None):
+    if source is None:
+        nodes = data.G.nodes()
+    else:
+        nodes = source
+    cycle_stack = []
+    output_cycles = set()
+
+    def get_hashable_cycle(cycle):
+        m = min(cycle)
+        mi = cycle.index(m)
+        mi_plus_1 = mi + 1 if mi < len(cycle) - 1 else 0
+        if cycle[mi - 1] > cycle[mi_plus_1]:
+            result = cycle[mi:] + cycle[:mi]
+        else:
+            result = list(reversed(cycle[:mi_plus_1])) + list(reversed(cycle[mi_plus_1:]))
+        return tuple(result)
+
+    for start in nodes:
+        if start in cycle_stack:
+            continue
+        cycle_stack.append(start)
+
+        stack = [(start, iter(data.G[start]))]
+        while stack:
+            parent, children = stack[-1]
+            try:
+                child = next(children)
+
+                if child not in cycle_stack:
+                    cycle_stack.append(child)
+                    stack.append((child, iter(data.G[child])))
+                else:
+                    i = cycle_stack.index(child)
+                    if i < len(cycle_stack) - 2:
+                        if len(get_hashable_cycle(cycle_stack[i:])) <= 6 and len(
+                                get_hashable_cycle(cycle_stack[i:])) != 3:
+                            return False
+
+            except StopIteration:
+                stack.pop()
+                cycle_stack.pop()
+
+    return True
 
 #
 # def edge_point_one(graph, edge):

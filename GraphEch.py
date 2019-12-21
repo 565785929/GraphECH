@@ -67,13 +67,19 @@ class GraphC:
         :return:
         """
         results = self.p7()
-        if len(results) == 0:
-            results = self.p6()
+        if self.remain_points != 0:
             if len(results) == 0:
-                results = self.p5()
+                results = self.p6()
                 if len(results) == 0:
-                    print("-=" * 20)
-                    print("Can't expand graph")
+                    results = self.p5()
+                    if len(results) == 0:
+                        print("=- Can't expand graph -=")
+                    else:
+                        print("p5")
+                else:
+                    print("p6")
+            else:
+                print("p7")
 
         return results
 
@@ -103,6 +109,7 @@ class GraphC:
                 g.G.add_edge(target, g.point_index)
                 g.remain_points -= 1
                 g.edge += 2
+                g.useful_point.append(g.point_index)
 
                 g_k5e = deepcopy(g)
                 g_k5e.useful_edge.append((source, g.point_index))
@@ -112,10 +119,10 @@ class GraphC:
 
                 if g.remain_points >= 2:
                     g.k5e_point.append(g.point_index)
-                    g.useful_point.append(g.point_index)
                     g.point_index += 1
-                    g.remain_points -= 2
-                    g.edge += 7
+                    add_k5e(g, (target, g.point_index-1, source))
+                    # g.remain_points -= 2
+                    # g.edge += 7
                     res.append(g)
                 # show_graph(g)
 
@@ -134,6 +141,8 @@ class GraphC:
                 g.G.add_node(g.point_index, point_num=0, position=(x, y))
                 g.useful_edge.append((source, g.point_index))
                 g.G.add_edge(source, g.point_index)
+                # add useful point
+                g.useful_point.append(g.point_index)
                 g.point_index += 1
                 g.remain_points -= 1
                 g.edge += 1
@@ -146,6 +155,7 @@ class GraphC:
                     g.G.add_node(g.point_index, point_num=0, position=(x1, y1))
                     g.useful_edge.append((target, g.point_index))
                     g.G.add_edge(target, g.point_index)
+                    g.useful_point.append(g.point_index)
 
                     g.point_index += 1
                     g.remain_points -= 1
@@ -163,17 +173,31 @@ class GraphC:
             self.edge += 1
             self.G.add_edge(p1[0], p1[1])
             p1 = find_all_p7_points(self)
-            print("-=" * 50)
+            print("=- all_p7 -=")
+
+    def shit_method(self):
+        """
+        遍历所有的点，连一下试试,,, 可以dp
+        :return:
+        """
+        nodes = self.G.nodes
+        edges = self.G.edges
+        for source in nodes:
+            for target in nodes:
+                if source != target:
+                    if (source, target) not in edges:
+                        self.G.add_edge(source, target)
+                        if not is_more_6(self):
+                            self.G.remove_edge(source, target)
+                        else:
+                            self.edge += 1
+                            return
+
 
 
 class GraphC7(GraphC):
-    def __init__(self):
+    def __init__(self, points):
         super().__init__()
-
-    def init_four(self, points):
-        """
-        初始化母图C7
-        """
         self.point_index = 8
         self.remain_points = points
         self.G.add_node(1, point_num=2, position=(0, 2))
@@ -185,6 +209,10 @@ class GraphC7(GraphC):
         self.G.add_node(7, point_num=2, position=(-1.5, 1.5))
         self.remain_points -= 7
 
+    def init_four(self):
+        """
+        初始化母图C7
+        """
         for _ in range(1, 8):
             self.G.add_edge(_, _ % 7 + 1, edge_num=1)
             self.useful_edge.append((_, _ % 7 + 1))
@@ -198,21 +226,10 @@ class GraphC7(GraphC):
 
         self.edge += 7
 
-    def init_two(self, points):
+    def init_two(self):
         """
         初始化母图C7
         """
-        self.point_index = 8
-        self.remain_points = points
-        self.G.add_node(1, point_num=2, position=(0, 2))
-        self.G.add_node(2, point_num=2, position=(1.5, 1.5))
-        self.G.add_node(3, point_num=2, position=(2, 0))
-        self.G.add_node(4, point_num=2, position=(1.5, -1.5))
-        self.G.add_node(5, point_num=2, position=(-1.5, -1.5))
-        self.G.add_node(6, point_num=2, position=(-2, 0))
-        self.G.add_node(7, point_num=2, position=(-1.5, 1.5))
-        self.remain_points -= 7
-
         for _ in range(1, 8):
             self.G.add_edge(_, _ % 7 + 1, edge_num=1)
             # self.useful_edge.append((_, _ % 7 + 1))
