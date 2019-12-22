@@ -347,8 +347,7 @@ def is_more_6(data, source=None):
                 else:
                     i = cycle_stack.index(child)
                     if i < len(cycle_stack) - 2:
-                        if len(get_hashable_cycle(cycle_stack[i:])) <= 6 and len(
-                                get_hashable_cycle(cycle_stack[i:])) != 3:
+                        if len(get_hashable_cycle(cycle_stack[i:])) == 6:
                             return False
 
             except StopIteration:

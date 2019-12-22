@@ -180,7 +180,7 @@ class GraphC:
         遍历所有的点，连一下试试,,, 可以dp
         :return:
         """
-        nodes = self.G.nodes
+        nodes = self.useful_point
         edges = self.G.edges
         for source in nodes:
             for target in nodes:
