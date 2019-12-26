@@ -57,12 +57,14 @@ def make_graph(graphs):
 
         # 拓展所有p7
         graph_c.all_p7()
-        graph_c.shit_method()
 
-        if graph_c.edge > result_graph.edge:
-            result_graph = graph_c
-        else:
-            del graph_c
+        if graph_c.edge >= result_graph.edge:
+            if graph_c.edge == result_graph.edge:
+                result_gs.append(graph_c)
+
+            else:
+                result_gs.clear()
+                result_graph = graph_c
 
     return deepcopy(result_graph)
 
@@ -97,10 +99,10 @@ def run():
 
         # ALL graph
 
-        # for g in result_gs:
+        for g in result_gs:
         #     # test
-        #     g.shit_method()
-        #     save_graph(points, g, path)
+            g.shit_method()
+            save_graph(points, g, path)
 
 
 if __name__ == '__main__':

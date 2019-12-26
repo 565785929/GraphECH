@@ -112,7 +112,7 @@ def add_xpoint(pos1, pos2, f=True):
         return x, y
 
 
-def add_k5_(graph, node, f=True):
+def add_k5(graph, node, f=True):
     """
     添加一个K5
     :param graph:
@@ -139,7 +139,7 @@ def add_k5_(graph, node, f=True):
     return graph
 
 
-def add_k5(graph, node, f=True):
+def add_k5_(graph, node, f=True):
     """
     添加一个K5
     :param graph:
@@ -347,7 +347,9 @@ def is_more_6(data, source=None):
                 else:
                     i = cycle_stack.index(child)
                     if i < len(cycle_stack) - 2:
-                        if len(get_hashable_cycle(cycle_stack[i:])) == 6:
+                        # if len(get_hashable_cycle(cycle_stack[i:])) == 6:
+                        if len(get_hashable_cycle(cycle_stack[i:])) <= 6 and len(
+                                get_hashable_cycle(cycle_stack[i:])) != 3:
                             return False
 
             except StopIteration:
