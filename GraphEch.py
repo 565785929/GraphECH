@@ -18,6 +18,9 @@ class GraphC:
         self.remain_points = 0
         # k5e
         self.k5e_point = []
+        # 尾点个数
+        self.tail_point = 0
+
 
 
     def useful_edge_length(self):
@@ -90,6 +93,7 @@ class GraphC:
             # p1 = find_fixed_len_points_one(self, p, 7)
             for target in targets:
                 g = deepcopy(self)
+                g.edge += 1
                 g.useful_edge.append((source, target))
                 g.G.add_edge(source, target)
                 res.append(g)
@@ -103,7 +107,10 @@ class GraphC:
                 g = deepcopy(self)
                 pos1 = g.G.nodes[source]['position']
                 pos2 = g.G.nodes[target]['position']
-                x, y = add_xpoint(pos1, pos2)
+                # x, y = add_xpoint(pos1, pos2)
+                x = (pos1[0] + 3 * pos2[0]) / 4
+                y = (pos1[1] + 3 * pos2[1]) / 4
+
                 g.G.add_node(g.point_index, point_num=0, position=(x, y))
                 g.G.add_edge(source, g.point_index)
                 g.G.add_edge(target, g.point_index)
@@ -120,9 +127,10 @@ class GraphC:
                 if g.remain_points >= 2:
                     g.k5e_point.append(g.point_index)
                     g.point_index += 1
-                    add_k5e(g, (target, g.point_index-1, source))
-                    # g.remain_points -= 2
-                    # g.edge += 7
+                    # 内存爆炸
+                    # add_k5e(g, (target, g.point_index-1, source))
+                    g.remain_points -= 2
+                    g.edge += 7
                     res.append(g)
                 # show_graph(g)
 
@@ -193,6 +201,23 @@ class GraphC:
                             self.edge += 1
                             return
 
+    def one_expand(self):
+        """
+        最后一个点，遍历连试试,
+        :return:
+        """
+        nodes = self.k5e_point
+        edges = self.G.edges
+        print("try final one")
+        source = self.point_index - 1
+        for target in nodes:
+            if (source, target) not in edges:
+                self.G.add_edge(source, target)
+                if not is_more_6(self):
+                    self.G.remove_edge(source, target)
+                else:
+                    self.edge += 1
+                    return
 
 
 class GraphC7(GraphC):

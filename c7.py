@@ -37,10 +37,17 @@ def make_graph(graphs):
                     elif len(edge) == 3:
                         # TODO 可优化 分解两个k5
                         add_13(graph_c, edge)
+                        graph_c.tail_point = 1
                     else:
                         add_12(graph_c, edge)
+                        graph_c.tail_point = 1
+
+                    # 拓展
+                    # graph_c.one_expand()
+
 
                 elif graph_c.remain_points == 2:
+                    graph_c.tail_point = 2
                     edge = graph_c.get_useful_edge()
                     # edge_point_two(graph_c, edge)
                     if len(edge) == 0:
@@ -50,7 +57,7 @@ def make_graph(graphs):
                     else:
                         add_25(graph_c, edge)
 
-            if graph_c.useful_edge_length() == 0:
+            if graph_c.useful_edge_length() == 0 and graph_c.remain_points != 0:
                 # 制造可拓展边
                 graphs.extend(graph_c.expand_p())
                 break
@@ -63,6 +70,8 @@ def make_graph(graphs):
                 result_gs.append(graph_c)
 
             else:
+                for i in result_gs:
+                    del i
                 result_gs.clear()
                 result_graph = graph_c
 
@@ -73,7 +82,7 @@ def make_graph(graphs):
 def run():
     path = "img_uuid"
     mkdir(path)
-    for points in range(28, 52):
+    for points in range(28, 51):
 
         # graph = GraphC7()
 
@@ -101,7 +110,10 @@ def run():
 
         for g in result_gs:
         #     # test
-            g.shit_method()
+        #     g.shit_method()
+        #     g.one_expand()
+            if g.tail_point == 1:
+                g.one_expand()
             save_graph(points, g, path)
 
 

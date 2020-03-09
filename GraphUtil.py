@@ -279,14 +279,18 @@ def save_graph(point, graph, path="img"):
     # pos = nx.spectral_layout(graph.G)  # Position nodes using Kamada-Kawai path-length cost-function.
     nx.draw_networkx_nodes(graph.G, pos,
                            nodelist=graph.G.nodes(),
+                           node_size=10,
+
                            node_color='y')
 
-    nx.draw(graph.G, with_labels=True, pos=pos)
+    nx.draw(graph.G, with_labels=False, pos=pos, node_size=10)
     nx.draw_networkx_nodes(graph.G, pos,
                            nodelist=graph.useful_point,
+                           node_size=10,
                            node_color='r')
     nx.draw_networkx_nodes(graph.G, pos,
                            nodelist=graph.k5e_point,
+                           node_size=10,
                            node_color='y')
     import uuid
     plt.savefig('./%s/%d_%d_%s.png' % (path, point, graph.edge, uuid.uuid1()))
@@ -347,9 +351,9 @@ def is_more_6(data, source=None):
                 else:
                     i = cycle_stack.index(child)
                     if i < len(cycle_stack) - 2:
-                        # if len(get_hashable_cycle(cycle_stack[i:])) == 6:
-                        if len(get_hashable_cycle(cycle_stack[i:])) <= 6 and len(
-                                get_hashable_cycle(cycle_stack[i:])) != 3:
+                        if len(get_hashable_cycle(cycle_stack[i:])) == 6:
+                        # if len(get_hashable_cycle(cycle_stack[i:])) <= 6 and len(
+                        #         get_hashable_cycle(cycle_stack[i:])) != 3:
                             return False
 
             except StopIteration:
