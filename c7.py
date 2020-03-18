@@ -109,9 +109,7 @@ def run():
         # ALL graph
 
         for g in result_gs:
-        #     # test
-        #     g.shit_method()
-        #     g.one_expand()
+
             if g.tail_point == 1:
                 g.one_expand()
             save_graph(points, g, path)

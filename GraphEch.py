@@ -21,8 +21,6 @@ class GraphC:
         # 尾点个数
         self.tail_point = 0
 
-
-
     def useful_edge_length(self):
         """
         可用边数量
