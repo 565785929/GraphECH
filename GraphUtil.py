@@ -1,8 +1,19 @@
+import hashlib
 import math
 import matplotlib.pyplot as plt
 import datetime
-import networkx as nx
 import os
+import pynauty as nu
+from pynauty import certificate
+import networkx as nx
+import uuid
+
+
+def get_graph_ceritficate(g):
+    temp = nu.Graph(g.G.size())
+    for _ in g.G.edges:
+        temp.connect_vertex(_[0] - 1, _[1] - 1)
+    return hashlib.sha256(certificate(temp)).hexdigest()
 
 
 def count_time(info=""):
@@ -272,8 +283,13 @@ def mkdir(path="img"):
 
 
 def save_graph(point, graph, path="img"):
-    print("saving img%d.jpg" % point)
+    path_name = './%s/%d_%d_%s.png' % (path, point, graph.edge, uuid.uuid1())
+    print("-="*50)
+    print(path_name)
     print("Point: %d, Edge: %d" % (point, graph.edge))
+    print(graph.G.degree)
+    print(graph.G.edges)
+    print("-="*50)
     pos = nx.get_node_attributes(graph.G, 'position')
     # pos = nx.circular_layout(graph.G)
     # pos = nx.spectral_layout(graph.G)  # Position nodes using Kamada-Kawai path-length cost-function.
@@ -292,8 +308,7 @@ def save_graph(point, graph, path="img"):
                            nodelist=graph.k5e_point,
                            node_size=10,
                            node_color='y')
-    import uuid
-    plt.savefig('./%s/%d_%d_%s.png' % (path, point, graph.edge, uuid.uuid1()))
+    plt.savefig(path_name)
     plt.close()
 
 

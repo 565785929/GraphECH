@@ -75,12 +75,12 @@ class GraphC:
                     results = self.p5()
                     if len(results) == 0:
                         print("=- Can't expand graph -=")
-                    else:
-                        print("p5")
-                else:
-                    print("p6")
-            else:
-                print("p7")
+                    # else:
+                        # print("p5")
+                # else:
+                #     print("p6")
+            # else:
+            #     print("p7")
 
         return results
 
@@ -179,7 +179,7 @@ class GraphC:
             self.edge += 1
             self.G.add_edge(p1[0], p1[1])
             p1 = find_all_p7_points(self)
-            print("=- all_p7 -=")
+            # print("=- all_p7 -=")
 
     def shit_method(self):
         """

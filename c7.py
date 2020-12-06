@@ -3,6 +3,17 @@ import time
 result_graph = None
 result_gs = None
 
+graph_set = set()
+
+def isomorphism(g):
+    gc = get_graph_ceritficate(g)
+    if gc in graph_set:
+        return True
+    else:
+        graph_set.add(gc)
+        print("isomorphism------graph:", g.G.edges)
+        return False
+
 
 @count_time()
 def make_graph(graphs):
@@ -67,7 +78,8 @@ def make_graph(graphs):
 
         if graph_c.edge >= result_graph.edge:
             if graph_c.edge == result_graph.edge:
-                result_gs.append(graph_c)
+                if not isomorphism(graph_c):
+                    result_gs.append(graph_c)
 
             else:
                 for i in result_gs:
@@ -82,7 +94,7 @@ def make_graph(graphs):
 def run():
     path = "img_uuid"
     mkdir(path)
-    for points in range(28, 51):
+    for points in range(28, 71):
 
         # graph = GraphC7()
 
@@ -102,7 +114,7 @@ def run():
         # graphs = [graph_two, ]
 
         graph = make_graph(graphs)
-        print(result_graph)
+        # print(result_graph)
         save_graph(points, result_graph, path=path)
         print(time.strftime('%Y.%m.%d %H:%M:%S ', time.localtime(time.time())))
 
