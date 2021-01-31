@@ -283,7 +283,7 @@ def mkdir(path="img"):
 
 
 def save_graph(point, graph, path="img"):
-    path_name = './%s/%d_%d_%s.png' % (path, point, graph.edge, uuid.uuid1())
+    path_name = './%s/%d_%d_%s_%s.png' % (path, point, graph.edge, graph.name, uuid.uuid1())
     print("-="*50)
     print(path_name)
     print("Point: %d, Edge: %d" % (point, graph.edge))

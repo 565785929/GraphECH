@@ -6,6 +6,7 @@ from GraphUtil import *
 class GraphC:
     def __init__(self):
         self.G = nx.Graph()
+        self.ppoints = 0
         # 边数
         self.edge = 0
         # 可用点
@@ -74,7 +75,8 @@ class GraphC:
                 if len(results) == 0:
                     results = self.p5()
                     if len(results) == 0:
-                        print("=- Can't expand graph -=")
+                        pass
+                        # print("=- Can't expand graph -=")
                     # else:
                         # print("p5")
                 # else:
@@ -206,7 +208,7 @@ class GraphC:
         """
         nodes = self.k5e_point
         edges = self.G.edges
-        print("try final one")
+        # print("try final one")
         source = self.point_index - 1
         for target in nodes:
             if (source, target) not in edges:
@@ -221,8 +223,10 @@ class GraphC:
 class GraphC7(GraphC):
     def __init__(self, points):
         super().__init__()
+        self.name = "G7"
         self.point_index = 8
         self.remain_points = points
+        self.ppoints = points
         self.G.add_node(1, point_num=2, position=(0, 2))
         self.G.add_node(2, point_num=2, position=(1.5, 1.5))
         self.G.add_node(3, point_num=2, position=(2, 0))
@@ -232,30 +236,21 @@ class GraphC7(GraphC):
         self.G.add_node(7, point_num=2, position=(-1.5, 1.5))
         self.remain_points -= 7
 
+        for _ in range(1, 8):
+            self.G.add_edge(_, _ % 7 + 1, edge_num=1)
+        self.edge += 7
+
     def init_four(self):
         """
         初始化母图C7
         """
         for _ in range(1, 8):
-            self.G.add_edge(_, _ % 7 + 1, edge_num=1)
             self.useful_edge.append((_, _ % 7 + 1))
-        # self.useful_edge.append((1,2))
-        # self.useful_edge.append((3,2))
-        # self.useful_edge.append((3,4))
-        # self.useful_edge.append((5,4))
-        # self.useful_edge.append((5,6))
-        # self.edge += 7
-        # self.remain_points -= 2
-
-        self.edge += 7
 
     def init_two(self):
         """
         初始化母图C7
         """
-        for _ in range(1, 8):
-            self.G.add_edge(_, _ % 7 + 1, edge_num=1)
-            # self.useful_edge.append((_, _ % 7 + 1))
         self.useful_edge.append((1, 2))
         self.useful_edge.append((3, 2))
         self.useful_edge.append((3, 4))
@@ -264,15 +259,15 @@ class GraphC7(GraphC):
         self.edge += 7
         self.remain_points -= 2
 
-        self.edge += 7
-
 
 class GraphC8(GraphC):
     def __init__(self, points):
         super().__init__()
 
+        self.name = "G8"
         self.point_index = 9
         self.remain_points = points
+        self.ppoints = points
         self.G.add_node(1, point_num=2, position=(0, 2))
         self.G.add_node(2, point_num=2, position=(1.5, 1.5))
         self.G.add_node(3, point_num=2, position=(2, 0))
@@ -314,3 +309,69 @@ class GraphC8(GraphC):
         self.useful_edge.append((7, 6))
         self.edge += 21
         self.remain_points -= 6
+
+
+class GraphC10(GraphC):
+    def __init__(self, points):
+        super().__init__()
+
+        self.name = "G10"
+        self.point_index = 11
+        self.remain_points = points
+        self.ppoints = points
+        self.G.add_node(1, point_num=2, position=(0, 4))
+        self.G.add_node(2, point_num=2, position=(2, 3))
+        self.G.add_node(3, point_num=2, position=(3.5, 1))
+        self.G.add_node(4, point_num=2, position=(3.5, -1))
+        self.G.add_node(5, point_num=2, position=(2, -3))
+        self.G.add_node(6, point_num=2, position=(0, -4))
+        self.G.add_node(7, point_num=2, position=(-2, -3))
+        self.G.add_node(8, point_num=2, position=(-3.5, -1))
+        self.G.add_node(9, point_num=2, position=(-3.5, 1))
+        self.G.add_node(10, point_num=2, position=(-2, 3))
+
+        self.remain_points -= 10
+
+        for _ in range(1, 11):
+            self.G.add_edge(_, _ % 10 + 1, edge_num=1)
+        self.edge += 10
+
+    def init_five(self):
+        for _ in range(1, 11):
+            self.useful_edge.append((_, _ % 10 + 1))
+
+    def init_four(self):
+        self.useful_edge.append((3, 2))
+        self.useful_edge.append((3, 4))
+        self.useful_edge.append((5, 4))
+        self.useful_edge.append((5, 6))
+        self.useful_edge.append((7, 6))
+        self.useful_edge.append((7, 8))
+        self.useful_edge.append((9, 8))
+        self.useful_edge.append((10, 9))
+        self.edge += 7
+        self.remain_points -= 2
+
+    def init_three(self):
+        self.useful_edge.append((3, 4))
+        self.useful_edge.append((5, 4))
+        self.useful_edge.append((5, 6))
+        self.useful_edge.append((7, 6))
+        self.useful_edge.append((7, 8))
+        self.useful_edge.append((9, 8))
+        self.edge += 14
+        self.remain_points -= 4
+
+    def init_two(self):
+        self.useful_edge.append((5, 4))
+        self.useful_edge.append((5, 6))
+        self.useful_edge.append((7, 6))
+        self.useful_edge.append((7, 8))
+        self.edge += 21
+        self.remain_points -= 6
+
+    def init_one(self):
+        self.useful_edge.append((5, 4))
+        self.useful_edge.append((7, 8))
+        self.edge += 28
+        self.remain_points -= 8

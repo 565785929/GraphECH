@@ -11,7 +11,7 @@ def isomorphism(g):
         return True
     else:
         graph_set.add(gc)
-        print("isomorphism------graph:", g.G.edges)
+        # print("isomorphism------graph:", g.G.edges)
         return False
 
 
@@ -75,11 +75,15 @@ def make_graph(graphs):
 
         # 拓展所有p7
         graph_c.all_p7()
+        bn = [0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 4, 5, 6, 7, 9, 10, 11, 13, 14, 16, 18, 20, 21, 23, 26, 28, 30, 32, 35,
+              37, 40, 43, 45, 48, 51, 54, 57, 61, 64, 67, 71, 74, 78, 82, 86, 90, 94, 98, 102, 106, 110, 115, 119, 124,
+              129, 133, 138, 143, 148, 153, 159, 164, 169, 175, 180, 186, 192, 198, 204, 210]
 
         if graph_c.edge >= result_graph.edge:
             if graph_c.edge == result_graph.edge:
-                if not isomorphism(graph_c):
-                    result_gs.append(graph_c)
+                if graph_c.edge >= bn[graph_c.ppoints]:
+                    if not isomorphism(graph_c):
+                        result_gs.append(graph_c)
 
             else:
                 for i in result_gs:
@@ -94,23 +98,35 @@ def make_graph(graphs):
 def run():
     path = "img_uuid"
     mkdir(path)
-    for points in range(28, 71):
+    for points in range(28, 74):
 
-        # graph = GraphC7()
+        g7_graph_two = GraphC7(points)
+        g7_graph_two.init_two()
+        g7_graph_four = GraphC7(points)
+        g7_graph_four.init_four()
 
-        graph_four = GraphC8(points)
-        graph_four.init_four()
+        g8_graph_four = GraphC8(points)
+        g8_graph_four.init_four()
+        g8_graph_three = GraphC8(points)
+        g8_graph_three.init_three()
+        g8_graph_two = GraphC8(points)
+        g8_graph_two.init_two()
+        g8_graph_one = GraphC8(points)
+        g8_graph_one.init_one()
 
-        graph_three = GraphC8(points)
-        graph_three.init_three()
+        g10_graph_five = GraphC10(points)
+        g10_graph_five.init_five()
+        g10_graph_four = GraphC10(points)
+        g10_graph_four.init_four()
+        g10_graph_three = GraphC10(points)
+        g10_graph_three.init_three()
+        g10_graph_two = GraphC10(points)
+        g10_graph_two.init_two()
+        g10_graph_one = GraphC10(points)
+        g10_graph_one.init_one()
 
-        graph_two = GraphC8(points)
-        graph_two.init_two()
-
-        graph_one = GraphC8(points)
-        graph_one.init_one()
-
-        graphs = [graph_four, graph_three, graph_two, graph_one]
+        graphs = [g10_graph_five, g10_graph_four, g10_graph_three, g10_graph_two, g10_graph_one, g8_graph_four,
+                  g8_graph_three, g8_graph_two, g8_graph_one, g7_graph_four, g7_graph_two]
         # graphs = [graph_two, ]
 
         graph = make_graph(graphs)
